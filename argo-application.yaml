@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/sayanote/getting-started-argocd.git
+    targetRevision: HEAD
+    path: app-configs
+  
+  destination:
+    # Kubernetes API Server
+    server: https://kubernetes.default.svc
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions:
+    # destinationのnamespaceが存在しない場合に作成する
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
